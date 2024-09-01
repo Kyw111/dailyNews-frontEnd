@@ -5,12 +5,17 @@ import axios from "axios";
 const BodyBox = () => {
 
     const [responseData, setResponseData] = useState(null);
+    const [companyName, setCompanyName] = useState('');
 
     const fetchData = async () => {
         try {
             const response = await axios.get('http://localhost:8080/news');
-            console.log(response.data.content);
             setResponseData(response.data.content);
+            // response.data.reduce(
+            //     (acc, item) => {
+            //        console.log(">>> cpName : ", item.companyName);
+        
+            //     });
         } catch (error) {
             console.error('Error fetching data:', error);
         }
@@ -18,10 +23,22 @@ const BodyBox = () => {
     
     useEffect(() => {
         fetchData();
-        console.log("useEffect");
-        console.log(responseData);
-
       }, []);
+
+      
+
+    //   const groupedData = responseData.reduce(
+    //     (acc, item) => {
+    //       const cpName = item.newsCompanyName;
+    //       if (cpName === "SBS Biz") {
+    //         acc.group1.push(item);
+    //       } else {
+    //         acc.group2.push(item);
+    //       }
+    //       return acc;
+    //     },
+    //     { group1: [], group2: [] }
+    //   );
 
     return (
         <>
@@ -43,7 +60,25 @@ const BodyBox = () => {
                             </tr>
                         ))}
                     </tbody>
-                    </table>
+                </table>
+                <table>
+                    <thead>
+                        <tr>
+                            <td>언론사</td>
+                            <td>제목</td>
+                            <td>url</td>
+                        </tr>
+                    </thead>
+                    <tbody>
+                    {responseData && responseData.map((data) => (
+                            <tr key={data.newsId}>
+                                <td>{data.newsCompanyName}</td>
+                                <td>{data.newsTitle}</td>
+                                <td>{data.newsUrl}</td>
+                            </tr>
+                        ))}
+                    </tbody>
+                </table>
             </div>        
         </>
     );
